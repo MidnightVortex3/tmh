@@ -7,25 +7,46 @@
     <style>
       :root {
         font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-        color: #222;
-        background-color: #f8f8f8;
+        color: #f3f3f3;
+        background-color: #050505;
       }
 
       body {
         margin: 0;
         min-height: 100vh;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        background: radial-gradient(circle at top, #101010, #050505 70%);
+        gap: 2.5rem;
+        padding: 0 1.5rem 3rem;
       }
 
       main {
         text-align: center;
+        max-width: 640px;
+        width: min(90vw, 640px);
         padding: 3rem;
-        border: 1px solid #dedede;
+        border: 1px solid #1f1f1f;
         border-radius: 4px;
         background-color: #fff;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        color: #222;
+        margin: 0 auto;
+      }
+
+      .info-panel {
+        max-width: 640px;
+        width: min(90vw, 640px);
+        text-align: center;
+        padding: 2rem;
+        border: 1px solid #1f1f1f;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        margin: 0 auto;
       }
 
       h1 {
@@ -40,10 +61,19 @@
     </style>
   </head>
   <body>
-    <main>
+    <modular-menu
+      data-links='[
+        {"label":"Home","href":"./aboutus.html"},
+        {"label":"About Us","href":"./aboutus.html"},
+        {"label":"Contact","href":"mailto:support@themilitaryhub.org","target":"_blank"}
+      ]'
+    ></modular-menu>
+
+    <main id="home">
       <h1>TMH</h1>
       <p>This is the default web page.</p>
       <p>YAY.</p>
     </main>
+    <script src="./scripts/menu-component.js"></script>
   </body>
 </html>

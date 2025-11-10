@@ -5,14 +5,23 @@ template.innerHTML = `
         :host {
             display: block;
             width: 100%;
+            position: sticky;
+            top: 0;
             z-index: 1000;
+            background: linear-gradient(120deg, #0b0b0b, #111827);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
         }
 
         .menu-container {
             position: relative;
             width: 100%;
-            text-align: center;
-            padding: 10px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem 2.75rem;
+            max-width: 1024px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         .menu-toggle {
@@ -20,20 +29,24 @@ template.innerHTML = `
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            transition: transform 0.5s ease, margin-top 0.5s ease;
-            margin-top: 0;
+            width: 44px;
+            height: 44px;
+            transition: transform 0.4s ease;
             background: none;
             border: none;
+            border-radius: 999px;
             padding: 0;
-            color: inherit;
+            color: #f7f7f7;
+            position: absolute;
+            left: 50%;
+            bottom: 0.25rem;
+            transform: translateX(-50%);
         }
 
         .menu-toggle svg {
             width: 100%;
             height: 100%;
-            fill: white;
+            fill: currentColor;
         }
 
         .menu-toggle:focus-visible {
@@ -42,18 +55,25 @@ template.innerHTML = `
         }
 
         .menu-toggle.flipped {
-            transform: rotate(180deg);
+            transform: translateX(-50%) rotate(180deg);
         }
 
         .menu-options {
             display: flex;
             justify-content: center;
-            background-color: rgba(0, 0, 0, 0.021);
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
             overflow: hidden;
-            transition: max-height 0.5s ease, opacity 0.5s ease;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
             max-height: 0;
             opacity: 0;
-            margin-bottom: 0;
+            margin: 0;
+            width: 100%;
+            max-width: 960px;
+            backdrop-filter: blur(8px);
+            flex-wrap: wrap;
+            flex: 1;
         }
 
         .menu-options.show {
@@ -62,12 +82,17 @@ template.innerHTML = `
         }
 
         .menu-options a {
-            color: white;
-            padding: 15px 20px;
+            color: #f7f7f7;
+            padding: 14px 28px;
             text-decoration: none;
-            flex: 1;
             text-align: center;
-            border-right: 2px solid #444;
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: background 0.3s ease, transform 0.2s ease;
+            min-width: 180px;
+            flex: 1;
         }
 
         .menu-options a:last-child {
@@ -76,7 +101,7 @@ template.innerHTML = `
 
         .menu-options a:hover {
             animation: bounce 0.3s;
-            background-color: #131313;
+            background-color: rgba(255, 255, 255, 0.12);
         }
 
         @keyframes bounce {
@@ -98,7 +123,7 @@ template.innerHTML = `
     </div>
 `;
 
-class TacticalMenu extends HTMLElement {
+class ModularMenu extends HTMLElement {
     static get observedAttributes() {
         return ['links', 'data-links'];
     }
@@ -138,9 +163,14 @@ class TacticalMenu extends HTMLElement {
     }
 
     handleToggle() {
-        const isOpen = this.menuOptionsEl.classList.toggle('show');
+        const shouldOpen = !this.menuOptionsEl.classList.contains('show');
+        this.setMenuOpen(shouldOpen);
+    }
+
+    setMenuOpen(isOpen) {
+        this.menuOptionsEl.classList.toggle('show', isOpen);
         this.menuToggleEl.classList.toggle('flipped', isOpen);
-        this.menuToggleEl.setAttribute('aria-expanded', String(isOpen));
+        this.menuToggleEl.setAttribute('aria-expanded', String(Boolean(isOpen)));
     }
 
     handleHoverSound() {
@@ -188,7 +218,7 @@ class TacticalMenu extends HTMLElement {
                     .filter(item => item.label && item.href);
             }
         } catch (error) {
-            console.warn(`[tactical-menu] Unable to parse ${attrName}:`, error);
+            console.warn(`[modular-menu] Unable to parse ${attrName}:`, error);
         }
         return null;
     }
@@ -220,10 +250,7 @@ class TacticalMenu extends HTMLElement {
             this.menuOptionsEl.appendChild(anchor);
         });
 
-        // Close menu if there are no links to display.
-        this.menuOptionsEl.classList.remove('show');
-        this.menuToggleEl.classList.remove('flipped');
-        this.menuToggleEl.setAttribute('aria-expanded', 'false');
+        this.setMenuOpen(false);
 
         this.attachSoundHandlers();
     }
@@ -258,4 +285,4 @@ class TacticalMenu extends HTMLElement {
     }
 }
 
-customElements.define('tactical-menu', TacticalMenu);
+customElements.define('modular-menu', ModularMenu);
