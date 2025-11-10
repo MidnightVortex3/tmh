@@ -158,14 +158,11 @@
         statusText.className = 'status';
 
         const payload = {
-          content: [
-            '**New Site Contact Form Submission**',
-            `**Name/Handle:** ${form.name.value}`,
-            `**Preferred Contact:** ${form.contactInfo.value}`,
-            '**Message:**',
-            form.message.value
-          ].join('\n')
+          name: form.name.value,
+          contactInfo: form.contactInfo.value,
+          message: form.message.value
         };
+
 
         try {
           const response = await fetch(DISCORD_WEBHOOK_URL, {
